@@ -31,5 +31,5 @@
         }
     },
 
-    "postCreateCommand": "cd fluxTrack && chmod +x mvnw && ./mvnw clean install -DskipTests"
+    "postCreateCommand": "cd fluxTrack && chmod +x mvnw && ./mvnw clean install -DskipTests -q"
 }

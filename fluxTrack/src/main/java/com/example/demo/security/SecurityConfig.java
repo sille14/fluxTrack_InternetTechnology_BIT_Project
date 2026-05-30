@@ -41,38 +41,44 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
-                    "/",
-                    "/login",
-                    "/products",
-                    "/partners",
-                    "/dashboard",
-                    "/reports",
-                    "/orders",
-                    "/tickets",
-                    "/users",          // Phase 2 — admin user management shell
-                    "/user/*/avatar", 
-                    "/css/**",
-                    "/js/**",
-                    "/images/**",
-                    "/swagger-ui.html",
-                    "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/docs",
-                    "/docs/**"
-                ).permitAll()
-                .requestMatchers("/token").hasRole("PARTNER")
-                .anyRequest().hasAuthority("SCOPE_READ")
-            )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
-            .httpBasic(withDefaults())
-            .build();
-    }
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                        "/",
+                        "/login",
+                        "/products",
+                        "/partners",
+                        "/dashboard",
+                        "/reports",
+                        "/orders",
+                        "/tickets",
+                        "/users",
+                        "/user/*/avatar", 
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/swagger-ui.html",
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**",
+                        "/docs",
+                        "/docs/**"
+                    ).permitAll()
+                    .requestMatchers("/token").hasRole("PARTNER")
+                    .anyRequest().hasAuthority("SCOPE_READ")
+                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
+                .httpBasic(basic -> basic
+                    .authenticationEntryPoint((request, response, authException) -> {
+                        response.setStatus(401);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"error\":\"Unauthorized\"}");
+                    })
+                )
+                .build();
+        }
 
     @Bean
     JwtEncoder jwtEncoder() {
