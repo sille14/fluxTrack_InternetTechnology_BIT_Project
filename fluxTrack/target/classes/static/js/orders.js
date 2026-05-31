@@ -11,7 +11,8 @@
 
 requireAuth();
 
-const isAdmin = getUser() === 'admin';
+const profile = getCachedProfile();
+const isAdmin = profile && profile.role === 'ADMIN';
 const partnerLookup = {};
 
 // ----- Pagination state -----

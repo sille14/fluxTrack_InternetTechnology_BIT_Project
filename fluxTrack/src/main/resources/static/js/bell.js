@@ -21,7 +21,8 @@
         const username = (typeof getUser === 'function') ? getUser() : null;
         if (!username) return;
 
-        const isAdmin = username === 'admin';
+        const profile = (typeof getCachedProfile === 'function') ? getCachedProfile() : null;
+        const isAdmin = profile && profile.role === 'ADMIN';
         const VIEWED_KEY = 'fluxtrack_lastTicketsViewedAt_' + username;
         const lastViewed = localStorage.getItem(VIEWED_KEY);
         const lastViewedTime = lastViewed ? new Date(lastViewed).getTime() : 0;

@@ -9,7 +9,8 @@
 
 requireAuth();
 
-const isAdmin = getUser() === 'admin';
+const profile = getCachedProfile();
+const isAdmin = profile && profile.role === 'ADMIN';
 const username = getUser();
 const VIEWED_KEY = 'fluxtrack_lastTicketsViewedAt_' + (username || 'anon');
 
