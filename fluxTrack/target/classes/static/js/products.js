@@ -108,17 +108,6 @@ async function loadPartners() {
                 select.appendChild(opt);
             });
             group.classList.remove('hidden');
-
-            const filterSelect = document.getElementById('product-partner-filter');
-            if (filterSelect) {
-                partners.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.partnerID;
-                    opt.textContent = p.partnerName;
-                    filterSelect.appendChild(opt);
-                });
-                document.getElementById('product-partner-filter-group').classList.remove('hidden');
-            }
         }
     } catch (err) {
         console.error('Failed to load partners', err);
@@ -135,7 +124,6 @@ async function loadProductsPage() {
     });
     if (currentSearch) params.set('search', currentSearch);
     if (currentFilter) params.set('filter', currentFilter);
-    if (currentPartner) params.set('partner', currentPartner);
 
     try {
         const res = await authFetch('/product/page?' + params.toString());
@@ -237,7 +225,6 @@ function escapeHtml(str) {
 function onFilterChange() {
     currentSearch = document.getElementById('search-input').value.trim();
     currentFilter = document.getElementById('filter-select').value;
-    currentPartner = isAdmin ? (document.getElementById('product-partner-filter')?.value || '') : '';
     currentPage = 0;
     loadProductsPage();
 }
@@ -259,8 +246,6 @@ document.getElementById('search-input').addEventListener('keyup', (e) => {
 });
 document.getElementById('search-input').addEventListener('input', onSearchInput);
 document.getElementById('filter-select').addEventListener('change', onFilterChange);
-const partnerFilterEl = document.getElementById('product-partner-filter');
-if (partnerFilterEl) partnerFilterEl.addEventListener('change', onFilterChange);
 
 // -------------------------------------------------------------
 // Pagination button handlers

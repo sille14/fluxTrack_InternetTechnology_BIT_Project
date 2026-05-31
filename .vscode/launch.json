@@ -5,14 +5,14 @@
             "type": "java",
             "name": "fluxTrack (Dev — H2 in-memory)",
             "request": "launch",
-            "mainClass": "com.example.demo.fluxTrackApplication",
+            "mainClass": "ch.fluxed.fluxtrack.fluxTrackApplication",
             "projectName": "demo"
         },
         {
             "type": "java",
             "name": "fluxTrack (Prod — local Postgres)",
             "request": "launch",
-            "mainClass": "com.example.demo.fluxTrackApplication",
+            "mainClass": "ch.fluxed.fluxtrack.fluxTrackApplication",
             "projectName": "demo",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "prod",
@@ -20,6 +20,16 @@
                 "SPRING_DATASOURCE_USERNAME": "postgres",
                 "SPRING_DATASOURCE_PASSWORD": "postgres"
             }
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-fluxTrackApplication<demo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.demo.fluxTrackApplication",
+            "projectName": "demo",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -104,7 +104,7 @@ Layered Architecture:
 
 <img width="1047" height="480" alt="image" src="https://github.com/user-attachments/assets/96328a78-b5cf-4f3d-aab1-f39d2b81416b" />
 
-The `com.example.demo.data.domain` package contains the following domain objects / entities including getters and setters:
+The `ch.fluxed.fluxtrack.data.domain` package contains the following domain objects / entities including getters and setters:
  
 - **Partner** (`@Entity`): a fluxed business partner with name, email, phone, and one or more addresses.
 - **Product** (`@Entity`): an item in the inventory with SKU, name, price, quantity, and a foreign key to its owning Partner.
@@ -127,7 +127,7 @@ The `com.example.demo.data.domain` package contains the following domain objects
 
 **Method:** `GET` -->
 
-The application enforces five business rules in the service layer (`com.example.demo.business`), each traceable to a specific use case in the Requirements Engineering paper.
+The application enforces five business rules in the service layer (`ch.fluxed.fluxtrack.business`), each traceable to a specific use case in the Requirements Engineering paper.
  
 **Rule 1 — Role-based product visibility (UC 301)**
  
@@ -182,9 +182,9 @@ Invalid transitions (e.g. attempting to move a ticket from OPEN directly to RESO
 
 The backend is implemented as a Spring Boot REST API following a three-layer architecture on the server tier:
  
-- **Controller layer** (`com.example.demo.controller`): exposes REST endpoints, handles HTTP concerns, delegates to services. Authentication is handled by a dedicated `AuthController` separate from the partner CRUD endpoints, isolating security concerns from business endpoints.
-- **Service layer** (`com.example.demo.business`): implements business logic and the rules described above.
-- **Persistence layer** (`com.example.demo.data.repository`): Spring Data JPA repositories backed by an H2 in-memory database.
+- **Controller layer** (`ch.fluxed.fluxtrack.controller`): exposes REST endpoints, handles HTTP concerns, delegates to services. Authentication is handled by a dedicated `AuthController` separate from the partner CRUD endpoints, isolating security concerns from business endpoints.
+- **Service layer** (`ch.fluxed.fluxtrack.business`): implements business logic and the rules described above.
+- **Persistence layer** (`ch.fluxed.fluxtrack.data.repository`): Spring Data JPA repositories backed by an H2 in-memory database.
 Security is handled by Spring Security with JWT-based stateless authentication. Tokens are issued by `POST /token` (HTTP Basic on the request, JWT in the response body) and verified on every subsequent request via the `Authorization: Bearer <token>` header. Three users are configured in-memory: `wylaade` and `drachehoehli` (role `PARTNER`), and `admin` (roles `PARTNER` + `ADMIN`).
  
 This Web application relies on [Spring Boot](https://projects.spring.io/spring-boot) and the following dependencies, configured via [Spring Initializr](https://start.spring.io/):
