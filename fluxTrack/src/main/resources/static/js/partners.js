@@ -12,7 +12,8 @@
 
 requireAuth();
 
-const isAdmin = getUser() === 'admin';
+const profile = getCachedProfile();
+const isAdmin = profile && profile.role === 'ADMIN';
 let allPartners = [];
 let pendingDeleteId = null;
 
