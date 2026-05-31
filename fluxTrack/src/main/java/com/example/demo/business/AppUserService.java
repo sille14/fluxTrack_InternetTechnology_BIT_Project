@@ -15,6 +15,10 @@ import org.springframework.stereotype.Service;
 import com.example.demo.data.domain.AppUser;
 import com.example.demo.data.repository.AppUserRepository;
 
+/**
+ * Handles user authentication and lookups. Implements Spring Security's
+ * UserDetailsService so the DaoAuthenticationProvider picks it up automatically.
+ */
 @Service
 public class AppUserService implements UserDetailsService {
 
@@ -26,16 +30,14 @@ public class AppUserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ---- Spring Security integration ----
-
+    // Spring Security hook — maps our AppUser entity to a Spring UserDetails object
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        // Every user gets ROLE_PARTNER — required by SecurityFilterChain for POST /token
-        authorities.add(new SimpleGrantedAuthority("ROLE_PARTNER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_PARTNER")); // every user needs this for POST /token
         if ("ADMIN".equals(user.getRole())) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
@@ -46,7 +48,7 @@ public class AppUserService implements UserDetailsService {
                 .build();
     }
 
-    // ---- Business methods ----
+    // CRUD operations
 
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll();
@@ -64,7 +66,7 @@ public class AppUserService implements UserDetailsService {
         return appUserRepository.existsByUsername(username);
     }
 
-    /** Seed a user with a raw (plain-text) password — BCrypt encoding happens here. */
+    /** Creates a user with a raw password — BCrypt encoding happens here. */
     public AppUser seedUser(String username, String rawPassword, String role,
                             Long partnerID, String displayName, String logoPath) {
         AppUser user = new AppUser();
@@ -85,13 +87,14 @@ public class AppUserService implements UserDetailsService {
         appUserRepository.deleteById(id);
     }
 
-    /** Shared admin check — replaces all hardcoded "admin".equals(username) checks. */
+    // Shared helpers — used by ProductService, OrderService, SupportTicketService
+    // to avoid duplicating username→role / username→partnerID logic
+
     public boolean isAdminUser(String username) {
         AppUser user = appUserRepository.findByUsername(username).orElse(null);
         return user != null && "ADMIN".equals(user.getRole());
     }
 
-    /** Shared partnerID resolution — replaces all hardcoded switch maps. */
     public Long getPartnerIdForUsername(String username) {
         AppUser user = appUserRepository.findByUsername(username).orElse(null);
         return user != null ? user.getPartnerID() : null;

@@ -12,6 +12,10 @@ import org.springframework.stereotype.Service;
 import com.example.demo.data.domain.Product;
 import com.example.demo.data.repository.ProductRepository;
 
+/**
+ * Product business logic — handles role-based filtering, ownership checks
+ * on updates/deletes, and server-side pagination with search + stock filters.
+ */
 @Service
 public class ProductService {
 
@@ -21,9 +25,7 @@ public class ProductService {
     @Autowired
     private AppUserService appUserService;
 
-    // -----------------------------------------------------------------
-    // BUSINESS RULE 1 (UC 301 - Show product overview)
-    // -----------------------------------------------------------------
+    // UC 301: admins see everything, partners only see their own products
     public List<Product> getProductsForUser(Authentication auth) {
         if (auth == null) return List.of();
         String username = auth.getName();
@@ -42,13 +44,10 @@ public class ProductService {
         return appUserService.getPartnerIdForUsername(username);
     }
 
-    // -----------------------------------------------------------------
-    // BUSINESS RULE 2 (UC 5 - Delete a Product)
-    // -----------------------------------------------------------------
+    // UC 5: only the owning partner (or admin) can delete a product
     public boolean deleteProductForUser(Long productId, Authentication auth) {
         Product product = productRepository.findById(productId).orElse(null);
-        if (product == null) return false;
-        if (auth == null) return false;
+        if (product == null || auth == null) return false;
 
         String username = auth.getName();
         if (appUserService.isAdminUser(username)) {
@@ -63,9 +62,8 @@ public class ProductService {
         return true;
     }
 
-    // -----------------------------------------------------------------
-    // Ownership-protected update
-    // -----------------------------------------------------------------
+    // Ownership-protected update — same logic as delete: admin bypass, partner ownership check.
+    // Also forces productPartnerID back to the caller's value to prevent reassignment.
     public Product updateProductForUser(Long id, Product updated, Authentication auth) {
         if (auth == null) return null;
         Product existing = productRepository.findById(id).orElse(null);
@@ -81,15 +79,14 @@ public class ProductService {
         return updateProduct(id, updated);
     }
 
-    // -----------------------------------------------------------------
-    // Server-side pagination + filtering
-    // -----------------------------------------------------------------
+    // Server-side pagination with optional search (name/SKU) and stock filter
     public Page<Product> getProductsPaged(Authentication auth, String search, String filter, Pageable pageable) {
         if (auth == null) return Page.empty(pageable);
         String username = auth.getName();
 
         Specification<Product> spec = (root, query, cb) -> cb.conjunction();
 
+        // scope to partner's own products unless admin
         if (!appUserService.isAdminUser(username)) {
             Long partnerId = appUserService.getPartnerIdForUsername(username);
             if (partnerId == null) return Page.empty(pageable);
@@ -113,9 +110,8 @@ public class ProductService {
         return productRepository.findAll(spec, pageable);
     }
 
-    // -----------------------------------------------------------------
-    // Payload validation
-    // -----------------------------------------------------------------
+    // Validation
+
     private void validateProduct(Product product) {
         if (product == null) {
             throw new IllegalArgumentException("Product payload is required");
@@ -128,9 +124,8 @@ public class ProductService {
         }
     }
 
-    // -----------------------------------------------------------------
     // CRUD methods
-    // -----------------------------------------------------------------
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }

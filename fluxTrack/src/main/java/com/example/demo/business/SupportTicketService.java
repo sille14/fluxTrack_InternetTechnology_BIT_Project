@@ -15,6 +15,10 @@ import com.example.demo.data.domain.TicketState;
 import com.example.demo.data.domain.TicketUrgency;
 import com.example.demo.data.repository.SupportTicketRepository;
 
+/**
+ * Support ticket lifecycle — creation, state transitions (based on the
+ * state machine in UC 107 / Figure 9), and role-scoped retrieval.
+ */
 @Service
 public class SupportTicketService {
 
@@ -24,9 +28,7 @@ public class SupportTicketService {
     @Autowired
     private AppUserService appUserService;
 
-    // -----------------------------------------------------------------
-    // BUSINESS RULE (UC 107 - Submit support tickets)
-    // -----------------------------------------------------------------
+    // Admins see all tickets, partners only see their own
     public List<SupportTicket> getTicketsForUser(Authentication auth) {
         if (auth == null) return List.of();
         String username = auth.getName();
@@ -40,8 +42,7 @@ public class SupportTicketService {
 
     public SupportTicket getTicketForUser(Long ticketId, Authentication auth) {
         SupportTicket ticket = ticketRepository.findById(ticketId).orElse(null);
-        if (ticket == null) return null;
-        if (auth == null) return null;
+        if (ticket == null || auth == null) return null;
         String username = auth.getName();
         if (appUserService.isAdminUser(username)) return ticket;
         Long callerPartnerId = appUserService.getPartnerIdForUsername(username);
@@ -51,9 +52,7 @@ public class SupportTicketService {
         return ticket;
     }
 
-    // -----------------------------------------------------------------
-    // Creation
-    // -----------------------------------------------------------------
+    // Only partners can create tickets (admins handle them, not raise them)
     public SupportTicket createTicket(String subject, TicketUrgency urgency,
                                       String description, Authentication auth) {
         if (auth == null) {
@@ -87,9 +86,8 @@ public class SupportTicketService {
         return ticketRepository.save(ticket);
     }
 
-    // -----------------------------------------------------------------
-    // State transition actions (UC 107 Figure 9)
-    // -----------------------------------------------------------------
+    // State transitions — each method enforces the allowed source state(s)
+    // and moves the ticket to the next state per the UC 107 state diagram.
 
     public SupportTicket adminReply(Long ticketId, String message, Authentication auth) {
         requireAdmin(auth);
@@ -136,9 +134,7 @@ public class SupportTicketService {
         return ticketRepository.save(ticket);
     }
 
-    // -----------------------------------------------------------------
-    // Seed helper
-    // -----------------------------------------------------------------
+    // Used by fluxTrackApplication.initTestData() to seed demo tickets
     public SupportTicket seedTicket(Long partnerID, String subject, TicketUrgency urgency,
                                     TicketState state, LocalDateTime when,
                                     List<TicketMessage> messages) {
@@ -153,9 +149,7 @@ public class SupportTicketService {
         return ticketRepository.save(ticket);
     }
 
-    // -----------------------------------------------------------------
-    // Helpers
-    // -----------------------------------------------------------------
+    // Internal helpers
 
     private void requireAdmin(Authentication auth) {
         if (auth == null || !appUserService.isAdminUser(auth.getName())) {

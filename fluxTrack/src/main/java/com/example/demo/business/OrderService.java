@@ -16,6 +16,10 @@ import com.example.demo.data.domain.Product;
 import com.example.demo.data.repository.OrderRepository;
 import com.example.demo.data.repository.ProductRepository;
 
+/**
+ * Order business logic — recording sales (stock deduction + order creation
+ * in one go) and paginated/filtered order retrieval scoped by role.
+ */
 @Service
 public class OrderService {
 
@@ -28,9 +32,7 @@ public class OrderService {
     @Autowired
     private AppUserService appUserService;
 
-    // -----------------------------------------------------------------
-    // BUSINESS RULE (UC 304 - View order history)
-    // -----------------------------------------------------------------
+    // UC 304: admins see all orders, partners only see their own
     public List<Order> getOrdersForUser(Authentication auth) {
         if (auth == null) return List.of();
         String username = auth.getName();
@@ -42,9 +44,8 @@ public class OrderService {
         return orderRepository.findByPartnerID(partnerId);
     }
 
-    // -----------------------------------------------------------------
-    // BUSINESS RULE (Record-a-Sale)
-    // -----------------------------------------------------------------
+    // Record-a-Sale: validates stock, checks ownership, creates the order
+    // and deducts quantity atomically
     public Order createOrderForSale(Long productId, Integer quantity, Authentication auth) {
         if (quantity == null || quantity <= 0) {
             throw new IllegalArgumentException("Quantity must be positive");
@@ -60,6 +61,7 @@ public class OrderService {
             throw new IllegalStateException("Not enough stock");
         }
 
+        // partners can only sell their own products, admins can sell any
         if (auth != null) {
             String username = auth.getName();
             if (!appUserService.isAdminUser(username)) {
@@ -87,9 +89,7 @@ public class OrderService {
         return order;
     }
 
-    // -----------------------------------------------------------------
-    // Server-side pagination + filtering
-    // -----------------------------------------------------------------
+    // Paginated order list with optional search, date range, and partner filter
     public Page<Order> getOrdersPaged(Authentication auth, String search, String dateFrom,
                                       String dateTo, Long partnerFilter, Pageable pageable) {
         Specification<Order> spec = buildOrderSpec(auth, search, dateFrom, dateTo, partnerFilter);
@@ -97,6 +97,7 @@ public class OrderService {
         return orderRepository.findAll(spec, pageable);
     }
 
+    // Summary stats for the orders header (count, total units, total revenue)
     public OrderSummary getOrdersSummary(Authentication auth, String search, String dateFrom,
                                          String dateTo, Long partnerFilter) {
         Specification<Order> spec = buildOrderSpec(auth, search, dateFrom, dateTo, partnerFilter);
@@ -113,6 +114,7 @@ public class OrderService {
         return new OrderSummary(count, totalUnits, totalRevenue);
     }
 
+    // Builds a JPA Specification combining role scoping, text search, and date range
     private Specification<Order> buildOrderSpec(Authentication auth, String search, String dateFrom,
                                                 String dateTo, Long partnerFilter) {
         if (auth == null) return null;
@@ -152,9 +154,7 @@ public class OrderService {
         return spec;
     }
 
-    // -----------------------------------------------------------------
-    // Seed helper
-    // -----------------------------------------------------------------
+    // Used by fluxTrackApplication.initTestData() to seed demo orders
     public Order seedOrder(Product product, Integer quantity, LocalDateTime when) {
         Order order = new Order(
             product.getProductID(),
