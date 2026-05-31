@@ -38,17 +38,18 @@ public class ProductController {
     }
 
     // Paginated list with search (name/SKU) and stock filter — used by Products page
-    @GetMapping(path = "/page", produces = "application/json")
+@GetMapping(path = "/page", produces = "application/json")
     public PagedResponse<Product> getProductsPage(
             Authentication auth,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String search,
-            @RequestParam(required = false) String filter) {
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) Long partner) {
         int safeSize = Math.min(Math.max(size, 1), 100);
         int safePage = Math.max(page, 0);
         Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.ASC, "productID"));
-        Page<Product> result = productService.getProductsPaged(auth, search, filter, pageable);
+        Page<Product> result = productService.getProductsPaged(auth, search, filter, partner, pageable);
         return PagedResponse.from(result);
     }
 

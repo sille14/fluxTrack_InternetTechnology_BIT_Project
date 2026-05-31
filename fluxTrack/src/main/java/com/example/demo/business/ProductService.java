@@ -80,7 +80,7 @@ public class ProductService {
     }
 
     // Server-side pagination with optional search (name/SKU) and stock filter
-    public Page<Product> getProductsPaged(Authentication auth, String search, String filter, Pageable pageable) {
+    public Page<Product> getProductsPaged(Authentication auth, String search, String filter, Long partnerFilter, Pageable pageable) {
         if (auth == null) return Page.empty(pageable);
         String username = auth.getName();
 
@@ -91,6 +91,8 @@ public class ProductService {
             Long partnerId = appUserService.getPartnerIdForUsername(username);
             if (partnerId == null) return Page.empty(pageable);
             spec = spec.and((root, query, cb) -> cb.equal(root.get("productPartnerID"), partnerId));
+        } else if (partnerFilter != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("productPartnerID"), partnerFilter));
         }
 
         if (search != null && !search.isBlank()) {

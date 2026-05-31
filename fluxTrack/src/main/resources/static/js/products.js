@@ -23,6 +23,7 @@ let totalPages  = 0;
 // Active filter values — set before calling loadProductsPage()
 let currentSearch = '';
 let currentFilter = '';
+let currentPartner = '';
 
 // Products visible on the current page
 let currentPageProducts = [];

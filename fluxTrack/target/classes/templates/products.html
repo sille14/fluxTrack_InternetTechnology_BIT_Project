@@ -24,6 +24,11 @@
                                 <option value="instock">In Stock</option>
                                 <option value="outofstock">Out of Stock</option>
                             </select>
+                            <span id="product-partner-filter-group" class="hidden">
+                                <select id="product-partner-filter" class="filter-select">
+                                    <option value="">All Partners</option>
+                                </select>
+                            </span>
                         </div>
                         <button class="search-btn" id="search-btn" aria-label="Search">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -34,7 +39,6 @@
                     </div>
                 </div>
 
-                <!-- Appears when ≥1 row checkbox is ticked. Managed by products.js. -->
                 <div id="bulk-action-bar" class="bulk-action-bar hidden">
                     <span id="bulk-action-count">0 selected</span>
                     <button type="button" id="bulk-delete-btn" class="btn btn-danger">Delete selected</button>
@@ -59,7 +63,6 @@
                     </tbody>
                 </table>
 
-                <!-- Server-side pagination controls — hidden when there's only one page. -->
                 <div id="pagination" class="pagination hidden">
                     <button type="button" id="page-prev" class="btn btn-gold-light">← Previous</button>
                     <span id="page-indicator" class="page-indicator">Page 1 of 1</span>
@@ -71,10 +74,6 @@
 </div>
 
 <!-- New/Edit Product Modal -->
-<!-- Placeholders below are neutral defaults; products.js overwrites them with
-     partner-appropriate examples (wine for Wylaade, board games for Drachehöhli)
-     when the modal is opened. The modal is reused for both Add and Edit;
-     products.js swaps the title and the submit method (POST vs PUT). -->
 <div id="product-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="product-modal-title">
     <div class="modal-content">
         <h2 id="product-modal-title">Add new product</h2>
@@ -110,7 +109,7 @@
     </div>
 </div>
 
-<!-- Delete Confirmation Modal (used for both single and bulk delete) -->
+<!-- Delete Confirmation Modal -->
 <div id="product-delete-modal" class="modal hidden" role="dialog" aria-modal="true">
     <div class="modal-content modal-small">
         <h2 id="product-delete-title">Delete product?</h2>
