@@ -8,16 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.demo.data.domain.Order;
 
-/**
- * JpaSpecificationExecutor is what enables the paginated/filtered endpoint
- * to build query predicates dynamically (search term, date range, partner
- * filter, role-based ownership) and combine them with a Pageable in one call.
- */
+/** JpaSpecificationExecutor enables dynamic filtering + pagination in OrderService. */
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long>, JpaSpecificationExecutor<Order> {
-    /**
-     * Returns all orders belonging to a specific partner.
-     * Used by OrderService.getOrdersForUser() to enforce role-based filtering.
-     */
     List<Order> findByPartnerID(Long partnerID);
 }

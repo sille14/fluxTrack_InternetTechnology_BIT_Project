@@ -19,13 +19,8 @@ import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 
 /**
- * SupportTicket entity (UC 107 — Submit support tickets).
- *
- * A ticket is raised by a partner, optionally responded to by admin (fluxed),
- * and progresses through the state machine defined in TicketState.
- *
- * The conversation between partner and admin is stored as a list of
- * TicketMessage values (embeddable, child table "ticket_message").
+ * Support ticket raised by a partner and handled by admin (UC 107).
+ * The conversation thread is stored as embedded TicketMessage values.
  */
 @Entity
 @Table(name = "support_ticket")

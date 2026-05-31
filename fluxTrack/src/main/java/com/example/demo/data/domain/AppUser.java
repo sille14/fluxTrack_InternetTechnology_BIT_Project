@@ -20,7 +20,7 @@ public class AppUser {
     private String username;
 
     @Column(nullable = false)
-    private String password; // BCrypt hash — no {noop} prefix
+    private String password; // BCrypt hash
 
     @Column(nullable = false, length = 20)
     private String role; // "ADMIN" or "PARTNER"
@@ -35,12 +35,10 @@ public class AppUser {
 
     @Lob
     @Column(columnDefinition = "BLOB")
-    private byte[] avatar; // uploaded avatar image bytes — Phase 3
+    private byte[] avatar; // uploaded avatar image bytes
 
     @Column(length = 50)
-    private String avatarContentType; // e.g. image/png — Phase 3
-
-    // ---- Getters & Setters ----
+    private String avatarContentType; // e.g. image/png
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

@@ -10,15 +10,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 /**
- * Order entity — represents a recorded sale of a product.
- * Maps to UC 304 (View order history) in the Requirements Engineering doc.
- *
- * partnerID is denormalized (also derivable via productID → product → partnerID)
- * to make per-partner queries fast and simple. productName is also denormalized
- * so the order history remains readable even if a product is later deleted.
+ * Represents a recorded sale. partnerID and productName are denormalized
+ * so the order history stays readable even if a product is later deleted.
  */
 @Entity
-@Table(name = "orders")   // "order" is a reserved SQL keyword
+@Table(name = "orders") // "order" is a reserved SQL keyword
 public class Order {
 
     @Id
