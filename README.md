@@ -16,7 +16,10 @@
     - [Backend Technology](#backend-technology)
     - [Frontend Technology](#frontend-technology)
   - [Execution](#execution)
-    - [Deployment to a PaaS](#deployment-to-a-paas)
+    - [Deployment to GitHub Codespaces](#deployment-to-github-codespaces)
+    - [Deployment to Render](#deployment-to-render)
+    - [Known Limitations](#known-limitations)
+    - [What We're Most Proud Of](#what-were-most-proud-of)
   - [Project Management](#project-management)
     - [Roles](#roles)
     - [Milestones](#milestones)
@@ -46,6 +49,7 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 (9) As an admin or partner, I want to see the historical orders relevant to me, so that I can understand demand patterns over time.
 (10) As a partner, I want to raise support tickets and follow the response from fluxed, so that I can resolve technical issues affecting my inventory.
 (11) As an admin or partner, I want to see aggregated sales reports for the relevant scope, so that I can understand performance over time.
+(12) As an admin, I want to create, edit, and delete user accounts and assign them roles and partner links, so that I can control who has access to the system.
 
 
 ### Use Case fluxTrack
@@ -62,6 +66,7 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 - UC-9 [View Order History]: Admin and Partner can review historical orders, scoped by role.
 - UC-10 [Submit and follow Support Tickets]: Partner can raise tickets; admin responds and progresses each ticket through its documented lifecycle.
 - UC-11 [Generate Reports]: Admin and Partner can review aggregated sales data with a date range filter and export CSVs of the visible tables.
+- UC-12 [Manage Users]: Admin can create, update, and delete application users incl. logins, assign roles, link them to partners, and manage avatars.
 
 ## Design
 > 🚧: Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, User Experience (UX), and so on.
@@ -110,22 +115,12 @@ The `ch.fluxed.fluxtrack.data.domain` package contains the following domain obje
 - **Product** (`@Entity`): an item in the inventory with SKU, name, price, quantity, and a foreign key to its owning Partner.
 - **Order** (`@Entity`): a recorded sale of a product, with denormalised product name and partner ID for query simplicity and historical readability.
 - **SupportTicket** (`@Entity`): a partner-raised support request with subject, urgency, lifecycle state, and a conversation thread of messages.
+- **AppUser** (`@Entity`): an application user with username, BCrypt-hashed password, role (ADMIN or PARTNER), optional partner link, display name, and avatar (stored as a BLOB).
 - **Address** (`@Embeddable`): a structured address used inside Partner.
 - **TicketMessage** (`@Embeddable`): a single message (author, content, timestamp) stored as part of a SupportTicket's conversation thread.
 
+
 ### Business Logic 
-> 🚧 : Describe the business logic for **at least one business service** in detail. If available, show the expected path and HTPP method. The remaining documentation of APIs shall be made available in the swagger endpoint. The default Swagger UI page is available at /swagger-ui.html.
-
-<!-- Based on the Use case description, there will be two user profiles, which have different roles and privileges.
-
-- The Admin is able to see all products of all partners
-- The Partner is only able to see the products listed under his profile
-
-**Path**: [`/api/menu/?location="Basel"`] 
-
-**Param**: `value="location"` Admitted value: "Basel","Brugg".
-
-**Method:** `GET` -->
 
 The application enforces five business rules in the service layer (`ch.fluxed.fluxtrack.business`), each traceable to a specific use case in the Requirements Engineering paper.
  
@@ -175,17 +170,15 @@ Invalid transitions (e.g. attempting to move a ticket from OPEN directly to RESO
 
 
 ## Implementation
-> 🚧: Briefly describe your technology stack, which apps were used and for what.
 
 ### Backend Technology
-> 🚧: It is suggested to clone this repository, but you are free to start from fresh with a Spring Initializr. If so, describe if there are any changes to the PizzaRP e.g., different dependencies, versions & etc... Please, also describe how your database is set up. If you want a persistent or in-memory H2 database check [link](https://github.com/FHNW-INT/Pizzeria_Reference_Project/blob/main/pizza/src/main/resources/application.properties). If you have placeholder data to initialize at the app, you may use a variation of the method **initPlaceholderData()** available at [link](https://github.com/FHNW-INT/Pizzeria_Reference_Project/blob/main/pizza/src/main/java/ch/fhnw/pizza/PizzaApplication.java).
 
 The backend is implemented as a Spring Boot REST API following a three-layer architecture on the server tier:
  
 - **Controller layer** (`ch.fluxed.fluxtrack.controller`): exposes REST endpoints, handles HTTP concerns, delegates to services. Authentication is handled by a dedicated `AuthController` separate from the partner CRUD endpoints, isolating security concerns from business endpoints.
 - **Service layer** (`ch.fluxed.fluxtrack.business`): implements business logic and the rules described above.
 - **Persistence layer** (`ch.fluxed.fluxtrack.data.repository`): Spring Data JPA repositories backed by an H2 in-memory database.
-Security is handled by Spring Security with JWT-based stateless authentication. Tokens are issued by `POST /token` (HTTP Basic on the request, JWT in the response body) and verified on every subsequent request via the `Authorization: Bearer <token>` header. Three users are configured in-memory: `wylaade` and `drachehoehli` (role `PARTNER`), and `admin` (roles `PARTNER` + `ADMIN`).
+Security is handled by Spring Security with JWT-based stateless authentication. Tokens are issued by `POST /token` (HTTP Basic on the request, JWT in the response body) and verified on every subsequent request via the `Authorization: Bearer <token>` header. Three users are seeded on first boot via AppUserService.seedUser(): `wylaade` and `drachehoehli` (role `PARTNER`), and `admin` (roles `PARTNER` + `ADMIN`).
  
 This Web application relies on [Spring Boot](https://projects.spring.io/spring-boot) and the following dependencies, configured via [Spring Initializr](https://start.spring.io/):
  
@@ -193,13 +186,15 @@ This Web application relies on [Spring Boot](https://projects.spring.io/spring-b
 - [Spring Boot Starter Thymeleaf](https://www.thymeleaf.org/) — server-rendered HTML templates
 - [Spring Boot Starter Data JPA](https://projects.spring.io/spring-data) — repositories
 - [Spring Boot Starter Security](https://spring.io/projects/spring-security) — JWT-based auth
+- [Spring Boot Starter Actuator](https://spring.io/guides/gs/actuator-service) — health/info endpoints
+- [Spring Boot Starter OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html) — JWT verification
+- [PostgreSQL driver](https://jdbc.postgresql.org/) — production profile support
 - [H2 Database Engine](https://www.h2database.com) — in-memory database, runtime scope
 - [springdoc-openapi-starter-webmvc-ui](https://springdoc.org/) v2.3.0 — generates Swagger UI at `/swagger-ui.html`
-Initial test data is seeded on application startup via an `@PostConstruct` method in `fluxTrackApplication`, creating two partners (Wylaade GmbH, Drachehöhli GmbH), nine products, fifteen historical orders spread over the past 30 days, and four support tickets in different lifecycle states.
+Initial test data is seeded on application startup via an `@PostConstruct` method in `fluxTrackApplication`, creating two partners (Wylaade GmbH, Drachehöhli GmbH), 19 products, around 35 historical orders spread over the past two months, and four support tickets in different lifecycle states.
 
 
 ### Frontend Technology
-> 🚧: Describe your views and what APIs is used on which view. If you don't have access to the Internet Technology class Budibase environment(https://inttech.budibase.app/), please write to Devid on MS teams.
 
 The frontend is a server-rendered application built with Thymeleaf and vanilla JavaScript, intentionally avoiding any external frontend framework. The decision was made because:
  
@@ -207,7 +202,7 @@ The frontend is a server-rendered application built with Thymeleaf and vanilla J
 - It keeps the entire project in a single Spring Boot deployment, with one auth setup and no separate frontend build pipeline.
 - It allows pixel-level fidelity to the Figma prototype, which would have been harder with a low-code platform.
 
-The frontend consists of seven views, each backed by a Thymeleaf template and a vanilla JavaScript module that handles interactivity through the `fetch` API.
+The frontend consists of eight views, each backed by a Thymeleaf template and a vanilla JavaScript module that handles interactivity through the `fetch` API.
  
 | View | URL | Backend endpoints used |
 |---|---|---|
@@ -215,6 +210,7 @@ The frontend consists of seven views, each backed by a Thymeleaf template and a 
 | Dashboard | `/dashboard` | `GET /product/`, `GET /partner/` |
 | Products | `/products` | `GET /product/`, `POST /product/add`, `PUT /product/{id}`, `DELETE /product/{id}`, `POST /order/sale` |
 | Partners | `/partners` *(admin only)* | `GET /partner/`, `POST /partner/add`, `PUT /partner/{id}`, `DELETE /partner/{id}` |
+| Users | `/users` *(admin only)* | `GET /user/`, `POST /user/add`, `PUT /user/{id}`, `DELETE /user/{id}`, `POST /user/{id}/avatar` |
 | Order History | `/orders` | `GET /order/`, `GET /partner/` |
 | Support Tickets | `/tickets` | `GET /ticket/`, `POST /ticket/`, `POST /ticket/{id}/admin-reply`, `/partner-reply`, `/resolve`, `/reopen`, `/complete` |
 | Reports | `/reports` | `GET /order/`, `GET /partner/` |
@@ -231,7 +227,6 @@ Styling is implemented in `static/css/app.css` using CSS custom properties for t
 
 
 ## Execution
-> 🚧: Please describe how to execute your app and what configurations must be changed to run it. 
 
 The application runs as a single Spring Boot service.
  
@@ -253,8 +248,18 @@ The application runs as a single Spring Boot service.
 5. The API documentation is available at [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html). To call authenticated endpoints from Swagger UI, paste a JWT obtained via `POST /token` into the *Authorize* dialog.
 H2 runs in in-memory mode, so all data resets on each application restart and is rebuilt from the seed data in `fluxTrackApplication.initTestData()`.
 
+### Deployment to GitHub Codespaces
 
-### Deployment to a PaaS
+This repository includes a `.devcontainer/devcontainer.json` that configures a ready-to-run
+development environment. To launch:
+
+1. Open the repository on GitHub.
+2. Click **Code → Codespaces → Create codespace on main**.
+3. Wait for the container to build (~2-3 minutes on first launch).
+4. Run the application via the IDE's Run button or `./mvnw spring-boot:run` in the terminal.
+5. The forwarded port 8080 opens automatically in your browser.
+
+### Deployment to Render
 > 🚧: Deployment to PaaS is optional but recommended as it will make your application (backend) accessible without server restart and through a unique, constantly available link.  
 
 Alternatively, you can deploy your application to a free PaaS like [Render](https://dashboard.render.com/register).
@@ -269,6 +274,22 @@ Alternatively, you can deploy your application to a free PaaS like [Render](http
 7. Click on Create Web Service. Your app will undergo automatic build and deployment. Monitor the logs to view the progress or error messages. The entire process of Build+Deploy might take several minutes.
 8. After successful deployment, you can access your backend using the generated unique URL (visible on top left under the name of your web service).
 9. This unique URL will remain unchanged as long as your web service is deployed on Render. You can now integrate it in Budibase to make API calls to your custom endpoints.
+
+### Known Limitations
+
+- **No persistent database in the demo deployment.** The application runs on H2 in-memory, so all data resets on restart. A PostgreSQL production profile (`application-prod.properties`) is wired and ready, but the demo intentionally uses H2 as recommended by the assessment for ease of evaluation.
+- **No Shopify integration.** The Requirements Engineering paper specifies bidirectional stock sync with Shopify (UC 202–205). This was descoped for the IT project because the Shopify API requires a paid developer store and OAuth credentials that would expire before grading. The architecture (service layer, REST endpoints) is designed so that a Shopify sync service could be added without changing existing code.
+- **No email notifications.** UC 107 mentions email alerts when a ticket state changes. The current implementation uses an in-app notification bell instead, which fulfils the same user need without requiring an SMTP server or third-party email service.
+- **Password recovery is not implemented.** The "Forgot password?" link on the login page shows a notice directing the user to contact their administrator. A real implementation would require email infrastructure.
+- **CSV export only, no PDF.** The Reports page supports CSV downloads but not PDF. Adding PDF generation would require an external library (e.g. iText or Apache PDFBox), which was not justified given the assessment scope.
+- **Single-currency (CHF).** Prices and revenue figures are hardcoded to Swiss francs. Multi-currency support was out of scope.
+
+### What We're Most Proud Of
+
+- **The support ticket system.** Building a full state machine (OPEN → ANSWERED → RESOLVED → COMPLETED, with reopening) with role-aware actions, a real-time conversation thread, and a notification bell that tracks unseen events via localStorage timestamps was the most complex feature and the one that taught us the most about modelling business workflows in a service layer.
+- **Ownership protection as a pattern.** Rather than scattering `if (isAdmin)` checks across controllers, we centralised ownership logic in the service layer: the same pattern (admin bypass, partner ownership check, defensive override) applies consistently to product reads, updates, deletes, order creation, and ticket actions. This made the codebase easier to reason about and extend.
+- **The frontend without a framework.** Vanilla JavaScript with `fetch` and DOM manipulation proved surprisingly capable for a dashboard application. Avoiding React or Vue kept the project in a single deployable artifact with zero build tooling, while still delivering features like debounced search, server-side pagination, tri-state select-all checkboxes, and an SVG bar chart — all without a single `npm install`.
+- **Profile-based dynamic branding.** The topbar, sidebar visibility, and modal placeholders all adapt to the logged-in user's profile (fetched once at login and cached in localStorage). Adding a new admin or partner user through the UI immediately works everywhere — no code changes, no config file edits.
 
 ## Project Management
 > 🚧: Include all the participants and briefly describe each of their **individual** contribution and/or roles. Screenshots/descriptions of your Kanban board or similar project management tools are welcome.
