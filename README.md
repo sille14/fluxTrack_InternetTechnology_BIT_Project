@@ -54,9 +54,6 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 
 ### Use Case fluxTrack
 
-> INSERT USE CASE IMAGE !
-
-![](images/use-case.png)
 - UC-1 [View all Products (Admin)]: Admin can retrieve all the Products on the product range from all Partners.
 - UC-2 [View Own Products (Partner)]: Partner can retrieve all the Products listed under the Partner's profile.
 - UC-3 [Create Product]: Admin and Partner can create new product entries in the application.
