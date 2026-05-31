@@ -34,7 +34,6 @@ public class AppUser {
     private String logoPath; // static logo, e.g. /images/partners/wylaade.png
 
     @Lob
-    @Column(columnDefinition = "BLOB")
     private byte[] avatar; // uploaded avatar image bytes
 
     @Column(length = 50)
