@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-fluxTrackApplication<fluxtrack>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "ch.fluxed.fluxtrack.fluxTrackApplication",
+            "projectName": "fluxtrack",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -56,6 +56,9 @@ public class PartnerService {
         if (updatedPartner.getPartnerPhone() != null) {
             existing.setPartnerPhone(updatedPartner.getPartnerPhone());
         }
+        if (updatedPartner.getPartnerAddress() != null) {
+            existing.setPartnerAddress(updatedPartner.getPartnerAddress());
+        }
         return partnerRepository.save(existing);
     }
 
