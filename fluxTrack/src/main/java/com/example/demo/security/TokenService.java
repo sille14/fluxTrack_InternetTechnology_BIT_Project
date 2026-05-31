@@ -13,9 +13,10 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+/** Generates signed JWT tokens for authenticated users. */
 @Service
 public class TokenService {
-    
+
     private final JwtEncoder jwtEncoder;
 
     public TokenService(JwtEncoder jwtEncoder) {
@@ -23,28 +24,30 @@ public class TokenService {
     }
 
     public String generateToken(Authentication authentication) {
-    // note the current time to determine the issuedAt and expiresAt
         Instant now = Instant.now();
-    // the scope is the JWT scope SCOPE_READ which is checked in SecurityConfig during authentication, this is not the role-based scope
+
+        // Build the JWT scope from non-role authorities. If none exist
+        // (which is the case for our users), fall back to "READ" so the
+        // token satisfies SecurityConfig's SCOPE_READ requirement.
         String scope = authentication.getAuthorities().stream()
             .map(GrantedAuthority::getAuthority)
-            .filter(authority -> !authority.startsWith("ROLE") && !authority.startsWith("FACTOR_"))
+            .filter(a -> !a.startsWith("ROLE") && !a.startsWith("FACTOR_"))
             .collect(Collectors.joining(" "));
         if (scope.isBlank()) {
             scope = "READ";
         }
-// create the JWT claims - name/value pairs
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuer("self") //issuer by this application
-            .issuedAt(now) //issued now
-            .expiresAt(now.plus(1, ChronoUnit.HOURS)) //expires in 1 hour
-            .subject(authentication.getName()) //subject is the username
-            .claim("scope", scope) //scope is the scope created above
-            .build();
-// create the JWT encoder parameters
-        var encoderParameters = JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS512).build(), claims); //use the symmetric key algorithm HS512 for signing the JWT
-        
-        return this.jwtEncoder.encode(encoderParameters).getTokenValue(); //encode the JWT and return the token value
-    }
 
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+            .issuer("self")
+            .issuedAt(now)
+            .expiresAt(now.plus(1, ChronoUnit.HOURS))
+            .subject(authentication.getName())
+            .claim("scope", scope)
+            .build();
+
+        var encoderParameters = JwtEncoderParameters.from(
+            JwsHeader.with(MacAlgorithm.HS512).build(), claims);
+
+        return this.jwtEncoder.encode(encoderParameters).getTokenValue();
+    }
 }

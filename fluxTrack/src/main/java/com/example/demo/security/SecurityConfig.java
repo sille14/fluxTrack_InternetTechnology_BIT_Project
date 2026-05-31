@@ -22,6 +22,11 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
+/**
+ * Security configuration: stateless JWT auth with BCrypt password hashing.
+ * AppUserService (implementing UserDetailsService) is auto-detected by
+ * Spring Boot's DaoAuthenticationProvider — no explicit bean needed here.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -30,55 +35,51 @@ public class SecurityConfig {
     @Value("${jwt.key}")
     private String jwtKey;
 
-    // ---- REMOVED: InMemoryUserDetailsManager bean ----
-    // AppUserService (@Service implementing UserDetailsService) is now
-    // auto-detected by Spring Boot's DaoAuthenticationProvider.
-    // No explicit UserDetailsService bean needed here.
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            return http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(
-                        "/",
-                        "/login",
-                        "/products",
-                        "/partners",
-                        "/dashboard",
-                        "/reports",
-                        "/orders",
-                        "/tickets",
-                        "/users",
-                        "/user/*/avatar", 
-                        "/css/**",
-                        "/js/**",
-                        "/images/**",
-                        "/swagger-ui.html",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/docs",
-                        "/docs/**"
-                    ).permitAll()
-                    .requestMatchers("/token").hasRole("PARTNER")
-                    .anyRequest().hasAuthority("SCOPE_READ")
-                )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
-                .httpBasic(basic -> basic
-                    .authenticationEntryPoint((request, response, authException) -> {
-                        response.setStatus(401);
-                        response.setContentType("application/json");
-                        response.getWriter().write("{\"error\":\"Unauthorized\"}");
-                    })
-                )
-                .build();
-        }
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/",
+                    "/login",
+                    "/products",
+                    "/partners",
+                    "/dashboard",
+                    "/reports",
+                    "/orders",
+                    "/tickets",
+                    "/users",
+                    "/user/*/avatar",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/docs",
+                    "/docs/**"
+                ).permitAll()
+                .requestMatchers("/token").hasRole("PARTNER")
+                .anyRequest().hasAuthority("SCOPE_READ")
+            )
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
+            .httpBasic(basic -> basic
+                // Return a clean 401 JSON instead of triggering the browser's native auth popup
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(401);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Unauthorized\"}");
+                })
+            )
+            .build();
+    }
 
     @Bean
     JwtEncoder jwtEncoder() {

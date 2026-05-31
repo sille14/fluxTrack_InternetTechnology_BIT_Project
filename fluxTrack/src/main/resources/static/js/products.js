@@ -29,7 +29,8 @@ let currentPageProducts = [];
 
 // ----- Supporting state -----
 const partnerLookup = {};   // { partnerID: partnerName } — fetched once
-const isAdmin = getUser() === 'admin';
+const profile = getCachedProfile();
+ const isAdmin = profile && profile.role === 'ADMIN';
 
 // Selection persists across page changes. Bulk delete operates on every
 // productID in this Set, regardless of which page the row was checked on.

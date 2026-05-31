@@ -46,25 +46,23 @@ public class fluxTrackApplication {
 		SpringApplication.run(fluxTrackApplication.class, args);
 	}
 
-	// Simple endpoint to test if the application is running
 	@GetMapping("/welcome")
 	public String getWelcomeString() {
 		return "Hello World";
 	}
 
-	// Initialize some test data for testing purposes
+	/**
+	 * Seeds demo data on first boot.
+	 * H2 (dev): DB is wiped on every restart, so this runs every time.
+	 * PostgreSQL (prod): data persists, so the guard skips seeding after the first run.
+	 */
 	@PostConstruct
 	public void initTestData() throws Exception {
-		// Only seed when the database is empty.
-		// - dev profile (in-memory H2): the DB is wiped on every restart, so it is
-		//   always empty here and the demo data is recreated each run (unchanged behaviour).
-		// - prod profile (PostgreSQL): data persists across restarts, so this guard
-		//   ensures the demo data is inserted only on the very first boot and never duplicated.
 		if (!partnerService.getAllPartners().isEmpty()) {
 			return;
 		}
 
-		// ---------- Partner 1: Wylaade GmbH ----------
+		// --- Partner 1: Wylaade GmbH ---
 		Partner wylaade = new Partner();
 		wylaade.setPartnerName("Wylaade GmbH");
 		wylaade.setPartnerEmail("info@wylaade.ch");
@@ -95,7 +93,7 @@ public class fluxTrackApplication {
 		productService.addProduct(makeProduct("00128", "Cornalin du Valais 2020",        42.00,  8, wylaadeId));
 		productService.addProduct(makeProduct("00134", "Champagne Bollinger Special Cuvée NV", 75.00, 0, wylaadeId));
 
-		// ---------- Partner 2: Drachehöhli GmbH ----------
+		// --- Partner 2: Drachehöhli GmbH ---
 		Partner drachehöhli = new Partner();
 		drachehöhli.setPartnerName("Drachehöhli GmbH");
 		drachehöhli.setPartnerEmail("info@drachehöhli.ch");
@@ -125,12 +123,12 @@ public class fluxTrackApplication {
 		productService.addProduct(makeProduct("00525", "7 Wonders Duel",                            32.50, 14, drachehöhliId));
 		productService.addProduct(makeProduct("00531", "MTG: Commander Deck Pack",                  39.90, 22, drachehöhliId));
 
-		// ---------- Seed application users (replaces InMemoryUserDetailsManager) ----------
+		// --- Application users ---
 		appUserService.seedUser("wylaade",      "password", "PARTNER", wylaadeId,      "Wylaade GmbH",     "/images/partners/wylaade.png");
 		appUserService.seedUser("drachehoehli", "password", "PARTNER", drachehöhliId,  "Drachehöhli GmbH", "/images/partners/drachehoehli.png");
 		appUserService.seedUser("admin",        "admin",    "ADMIN",   null,           "Administrator",    "/images/partners/fluxed.png");
 
-		// ---------- Seed historical orders (UC 304) ----------
+		// --- Historical orders (UC 304) ---
 		List<Product> allProductsForSeed = productService.getAllProducts();
 		LocalDateTime now = LocalDateTime.now();
 
@@ -181,7 +179,7 @@ public class fluxTrackApplication {
 		seedOrderIfPresent(bySku, "00510", 2, now.minusDays(4).withHour(11).withMinute(55));
 		seedOrderIfPresent(bySku, "00505", 1, now.minusDays(1).withHour(16).withMinute(0));
 
-		// ---------- Seed support tickets (UC 107) ----------
+		// --- Support tickets (UC 107) ---
 
 		ticketService.seedTicket(
 			wylaadeId,
