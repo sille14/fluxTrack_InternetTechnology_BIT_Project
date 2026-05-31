@@ -38,17 +38,17 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 
 
 ### User Stories
-(1) As an admin, I want to view all products across all partners, so that I can have a complete overview of the product range.
-(2) As a partner, I want to view all products under my profile, so that I can manage and review my own product listings.
-(3) As an admin or partner, I want to create new product entries, so that I can expand the product range available in the application.
-(4) As an admin or partner, I want to view detailed information about a specific product, so that I can understand its attributes and details.
-(5) As an admin or partner, I want to create, update, and delete products, so that I can keep the product range accurate and up to date.
-(6) As an admin, I want to create new partner profiles, so that new partners can be onboarded into the system.
-(7) As an admin or partner, I want to edit partner profiles, so that partner information remains accurate and up to date.
-(8) As an admin, I want to view all partners, so that I can have an overview of all partner profiles in the system.
-(9) As an admin or partner, I want to see the historical orders relevant to me, so that I can understand demand patterns over time.
-(10) As a partner, I want to raise support tickets and follow the response from fluxed, so that I can resolve technical issues affecting my inventory.
-(11) As an admin or partner, I want to see aggregated sales reports for the relevant scope, so that I can understand performance over time.
+(1) As an admin, I want to view all products across all partners, so that I can have a complete overview of the product range.  
+(2) As a partner, I want to view all products under my profile, so that I can manage and review my own product listings.  
+(3) As an admin or partner, I want to create new product entries, so that I can expand the product range available in the application.  
+(4) As an admin or partner, I want to view detailed information about a specific product, so that I can understand its attributes and details.  
+(5) As an admin or partner, I want to create, update, and delete products, so that I can keep the product range accurate and up to date.  
+(6) As an admin, I want to create new partner profiles, so that new partners can be onboarded into the system.  
+(7) As an admin or partner, I want to edit partner profiles, so that partner information remains accurate and up to date.  
+(8) As an admin, I want to view all partners, so that I can have an overview of all partner profiles in the system.  
+(9) As an admin or partner, I want to see the historical orders relevant to me, so that I can understand demand patterns over time.  
+(10) As a partner, I want to raise support tickets and follow the response from fluxed, so that I can resolve technical issues affecting my inventory.  
+(11) As an admin or partner, I want to see aggregated sales reports for the relevant scope, so that I can understand performance over time.  
 (12) As an admin, I want to create, edit, and delete user accounts and assign them roles and partner links, so that I can control who has access to the system.
 
 
