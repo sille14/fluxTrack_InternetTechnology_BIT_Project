@@ -21,34 +21,23 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-
-
 import com.example.demo.business.ProductService;
 import com.example.demo.data.domain.Product;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    
+
     @Autowired
     private ProductService productService;
 
-    // Get All Products — returns the full role-scoped list.
-    // Still used by the Dashboard, Reports, and Partners pages that
-    // need every visible product, not a page slice.
+    // Full list (role-scoped) — used by Dashboard, Reports, Partners pages
     @GetMapping("/")
     public List<Product> getAllProducts(Authentication auth) {
         return productService.getProductsForUser(auth);
     }
 
-    /**
-     * Server-side paginated product list with optional filters.
-     *
-     * Used by the Products page. Search matches productName OR productSKU
-     * (case-insensitive); filter accepts "instock" or "outofstock".
-     * Role-based scoping is enforced inside the service — partner users
-     * never see another partner's products even if they craft the URL.
-     */
+    // Paginated list with search (name/SKU) and stock filter — used by Products page
     @GetMapping(path = "/page", produces = "application/json")
     public PagedResponse<Product> getProductsPage(
             Authentication auth,
@@ -56,7 +45,6 @@ public class ProductController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) String search,
             @RequestParam(required = false) String filter) {
-        // Cap the page size so a malicious caller can't request an unbounded result.
         int safeSize = Math.min(Math.max(size, 1), 100);
         int safePage = Math.max(page, 0);
         Pageable pageable = PageRequest.of(safePage, safeSize, Sort.by(Sort.Direction.ASC, "productID"));
@@ -64,65 +52,42 @@ public class ProductController {
         return PagedResponse.from(result);
     }
 
-    // Get Product by ID
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        try {
-            Product product = productService.getProductById(id);
-            return ResponseEntity.ok(product);
-        } 
-        catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found with given id: " + id, e);
-        } 
+        Product product = productService.getProductById(id);
+        if (product == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found: " + id);
+        }
+        return ResponseEntity.ok(product);
     }
 
-    // Add Product
     @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Product> addProduct(@RequestBody Product product, Authentication auth) {
-        try {
-            // BUSINESS RULE: partner users can only create products for themselves.
-            Long forcedPartnerId = productService.resolvePartnerIdForUser(auth);
-            if (forcedPartnerId != null) {
-                product.setProductPartnerID(forcedPartnerId);
-            } else if (product.getProductPartnerID() == null) {
-                product.setProductPartnerID(1L);
-            }
-
-            product = productService.addProduct(product);
-            return ResponseEntity.ok(product);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (Exception e) {
-            throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Failed to add product: " + e.getMessage(),
-                e
-            );
+        // Partners can only create products under their own partnerID
+        Long forcedPartnerId = productService.resolvePartnerIdForUser(auth);
+        if (forcedPartnerId != null) {
+            product.setProductPartnerID(forcedPartnerId);
+        } else if (product.getProductPartnerID() == null) {
+            product.setProductPartnerID(1L);
         }
+
+        return ResponseEntity.ok(productService.addProduct(product));
     }
 
-    // Update Product
-    // Ownership-protected: partners can only update their own products;
-    // admin can update any. Returns 403 if the caller doesn't own the
-    // product or it doesn't exist. Returns 400 if the payload is invalid.
+    // Ownership-protected: partners can only edit their own, admin can edit any
     @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long id,
             @RequestBody Product product,
             Authentication auth) {
-        Product updated;
-        try {
-            updated = productService.updateProductForUser(id, product, auth);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        }
+        Product updated = productService.updateProductForUser(id, product, auth);
         if (updated != null) {
             return ResponseEntity.ok(updated);
         }
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot update this product");
     }
 
-    // Delete Product
+    // Ownership-protected delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id, Authentication auth) {
         boolean deleted = productService.deleteProductForUser(id, auth);
@@ -131,5 +96,4 @@ public class ProductController {
         }
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Cannot delete this product");
     }
-
 }

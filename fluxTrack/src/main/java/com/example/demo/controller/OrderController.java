@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.business.OrderService;
 import com.example.demo.data.domain.Order;
@@ -28,22 +26,13 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    /**
-     * List all orders visible to the authenticated user.
-     * Admin sees all; partners see their own.
-     * Still used by the Reports page (full client-side aggregation).
-     */
+    // Full list (role-scoped) — used by Reports page for client-side aggregation
     @GetMapping("/")
     public List<Order> getAllOrders(Authentication auth) {
         return orderService.getOrdersForUser(auth);
     }
 
-    /**
-     * Server-side paginated order list with optional filters.
-     *
-     * Used by the Order History page. Supports search by productName,
-     * a date range, and (admin only) a partner filter. Sorted newest first.
-     */
+    // Paginated list with search, date range, and partner filter — used by Order History page
     @GetMapping(path = "/page", produces = "application/json")
     public PagedResponse<Order> getOrdersPage(
             Authentication auth,
@@ -60,11 +49,7 @@ public class OrderController {
         return PagedResponse.from(result);
     }
 
-    /**
-     * Aggregate totals (count, units, revenue) for the same filtered set
-     * as /page. Used by the Order History summary card so that the totals
-     * always reflect the full filtered range, not just the current page.
-     */
+    // Summary stats (count, units, revenue) matching the same filters as /page
     @GetMapping(path = "/summary", produces = "application/json")
     public OrderService.OrderSummary getOrdersSummary(
             Authentication auth,
@@ -75,29 +60,18 @@ public class OrderController {
         return orderService.getOrdersSummary(auth, search, dateFrom, dateTo, partner);
     }
 
-    /**
-     * Record a sale: creates an Order and decrements product stock atomically.
-     * Body: { "productID": 1, "quantity": 1 }
-     */
+    // Record-a-Sale: creates an order and deducts stock in one go
     @PostMapping(path = "/sale", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Order> recordSale(@RequestBody SaleRequest request, Authentication auth) {
-        try {
-            Order order = orderService.createOrderForSale(
-                request.getProductID(),
-                request.getQuantity(),
-                auth
-            );
-            return ResponseEntity.ok(order);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (IllegalStateException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-        } catch (SecurityException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+        Order order = orderService.createOrderForSale(
+            request.getProductID(),
+            request.getQuantity(),
+            auth
+        );
+        return ResponseEntity.ok(order);
     }
 
-    /** DTO for POST /order/sale */
+    // Request DTO for POST /order/sale
     public static class SaleRequest {
         private Long productID;
         private Integer quantity;

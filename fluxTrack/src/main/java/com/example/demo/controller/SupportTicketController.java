@@ -39,22 +39,17 @@ public class SupportTicketController {
         return ResponseEntity.ok(ticket);
     }
 
-    /** Partner creates a new ticket. Body: { subject, urgency, description } */
+    // Partner creates a new ticket
     @PostMapping(path = "/", consumes = "application/json", produces = "application/json")
     public ResponseEntity<SupportTicket> createTicket(@RequestBody CreateTicketRequest req,
                                                        Authentication auth) {
-        try {
-            SupportTicket ticket = ticketService.createTicket(
-                req.getSubject(), req.getUrgency(), req.getDescription(), auth);
-            return ResponseEntity.ok(ticket);
-        } catch (IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage(), e);
-        } catch (SecurityException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage(), e);
-        }
+        SupportTicket ticket = ticketService.createTicket(
+            req.getSubject(), req.getUrgency(), req.getDescription(), auth);
+        return ResponseEntity.ok(ticket);
     }
 
-    /** Admin replies to an open ticket. Body: { message } */
+    // State transition endpoints — each maps to a step in the UC 107 state diagram
+
     @PostMapping(path = "/{id}/admin-reply", consumes = "application/json")
     public ResponseEntity<SupportTicket> adminReply(@PathVariable Long id,
                                                      @RequestBody MessageRequest req,
@@ -63,7 +58,6 @@ public class SupportTicketController {
             ticketService.adminReply(id, req.getMessage(), auth));
     }
 
-    /** Partner replies but is not satisfied: ANSWERED -> OPEN. Body: { message } */
     @PostMapping(path = "/{id}/partner-reply", consumes = "application/json")
     public ResponseEntity<SupportTicket> partnerReply(@PathVariable Long id,
                                                        @RequestBody MessageRequest req,
@@ -72,13 +66,11 @@ public class SupportTicketController {
             ticketService.partnerReply(id, req.getMessage(), auth));
     }
 
-    /** Partner confirms problem solved: ANSWERED -> RESOLVED. No body. */
     @PostMapping("/{id}/resolve")
     public ResponseEntity<SupportTicket> resolve(@PathVariable Long id, Authentication auth) {
         return runTransition(() -> ticketService.markResolved(id, auth));
     }
 
-    /** Admin reopens with a clarification request: RESOLVED -> OPEN. Body: { message } */
     @PostMapping(path = "/{id}/reopen", consumes = "application/json")
     public ResponseEntity<SupportTicket> reopen(@PathVariable Long id,
                                                  @RequestBody MessageRequest req,
@@ -87,12 +79,12 @@ public class SupportTicketController {
             ticketService.adminReopen(id, req.getMessage(), auth));
     }
 
-    /** Admin closes as final: RESOLVED -> COMPLETED. No body. */
     @PostMapping("/{id}/complete")
     public ResponseEntity<SupportTicket> complete(@PathVariable Long id, Authentication auth) {
         return runTransition(() -> ticketService.markCompleted(id, auth));
     }
 
+    // Shared error handling for all state transitions
     private ResponseEntity<SupportTicket> runTransition(java.util.function.Supplier<SupportTicket> op) {
         try {
             return ResponseEntity.ok(op.get());
@@ -105,7 +97,7 @@ public class SupportTicketController {
         }
     }
 
-    // ----- Request DTOs ---------------------------------------------------
+    // Request DTOs
 
     public static class CreateTicketRequest {
         private String subject;

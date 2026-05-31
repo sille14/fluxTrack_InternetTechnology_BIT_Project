@@ -24,6 +24,10 @@ import com.example.demo.business.PartnerService;
 import com.example.demo.data.domain.AppUser;
 import com.example.demo.data.domain.Partner;
 
+/**
+ * User management endpoints. Profile lookup is open to all authenticated users;
+ * CRUD and avatar management are admin-only.
+ */
 @RestController
 public class UserController {
 
@@ -39,12 +43,11 @@ public class UserController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // ---- Helper: role-based admin check ----
-
     private boolean isAdmin(Authentication auth) {
         return appUserService.isAdminUser(auth.getName());
     }
 
+    // Builds the JSON response for a user, enriching it with partner name and avatar URL
     private Map<String, Object> toDto(AppUser u) {
         Map<String, Object> dto = new HashMap<>();
         dto.put("id", u.getId());
@@ -70,8 +73,7 @@ public class UserController {
         return dto;
     }
 
-    // ---- Profile endpoint (all authenticated users) ----
-
+    // Profile — any authenticated user can fetch their own profile
     @GetMapping("/user/profile")
     public ResponseEntity<Map<String, Object>> getProfile(Authentication auth) {
         AppUser user = appUserService.findByUsername(auth.getName());
@@ -79,7 +81,7 @@ public class UserController {
         return ResponseEntity.ok(toDto(user));
     }
 
-    // ---- CRUD endpoints (admin-only) ----
+    // Admin-only CRUD
 
     @GetMapping("/user/")
     public ResponseEntity<?> getAllUsers(Authentication auth) {
@@ -184,10 +186,10 @@ public class UserController {
         AppUser user = appUserService.findById(id);
         if (user == null) return ResponseEntity.notFound().build();
 
+        // Safety checks: can't delete yourself or the last remaining admin
         if (user.getUsername().equals(auth.getName())) {
             return ResponseEntity.badRequest().body(Map.of("error", "You cannot delete your own account."));
         }
-
         if ("ADMIN".equals(user.getRole())) {
             long adminCount = appUserService.getAllUsers().stream()
                     .filter(u -> "ADMIN".equals(u.getRole()))
@@ -201,9 +203,8 @@ public class UserController {
         return ResponseEntity.ok(Map.of("deleted", true));
     }
 
-    // ---- Avatar endpoints ----
+    // Avatar endpoints
 
-    /** Upload avatar — admin-only (managing other users' avatars). */
     @PostMapping("/user/{id}/avatar")
     public ResponseEntity<?> uploadAvatar(@PathVariable Long id,
                                           @RequestParam("file") MultipartFile file,
@@ -233,7 +234,7 @@ public class UserController {
         }
     }
 
-    /** Serve avatar — permitAll (used by <img> tags). */
+    // Serve avatar image — permitAll so <img> tags work without a token
     @GetMapping("/user/{id}/avatar")
     public ResponseEntity<byte[]> getAvatar(@PathVariable Long id) {
         AppUser user = appUserService.findById(id);
@@ -246,7 +247,6 @@ public class UserController {
                 .body(user.getAvatar());
     }
 
-    /** Remove avatar — admin-only. */
     @DeleteMapping("/user/{id}/avatar")
     public ResponseEntity<?> deleteAvatar(@PathVariable Long id, Authentication auth) {
         if (!isAdmin(auth)) {

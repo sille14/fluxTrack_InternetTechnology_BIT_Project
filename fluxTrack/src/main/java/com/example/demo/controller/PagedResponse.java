@@ -5,13 +5,8 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 
 /**
- * Stable JSON shape for paginated REST responses.
- *
- * Wrapping Spring Data's Page&lt;T&gt; here (rather than returning it directly)
- * avoids depending on Spring's internal PageImpl serialization, which is
- * version-fragile and includes a lot of fields the frontend doesn't need.
- * The fields exposed here are exactly what products.js / orders.js consume:
- * the items themselves plus enough metadata to render pagination controls.
+ * Wraps Spring Data's Page into a stable JSON shape for the frontend.
+ * Avoids depending on PageImpl's serialization which changes between Spring versions.
  */
 public record PagedResponse<T>(
     List<T> content,

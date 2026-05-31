@@ -30,49 +30,33 @@ public class PartnerController {
     @Autowired
     private AppUserService appUserService;
 
-    // Get Partner by ID
     @GetMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<Partner> getPartnerById(@PathVariable Long id) {
-        try {
-            Partner partner = partnerService.getPartnerById(id);
-            return ResponseEntity.ok(partner);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Partner not found with given id: " + id, e);
+        Partner partner = partnerService.getPartnerById(id);
+        if (partner == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Partner not found: " + id);
         }
+        return ResponseEntity.ok(partner);
     }
 
-    // Get All Partners
     @GetMapping(path = "/", produces = "application/json")
     public List<Partner> getAllPartners() {
         return partnerService.getAllPartners();
     }
 
-    // Add Partner
     @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Partner> addPartner(@RequestBody Partner partner) {
-        try {
-            partner = partnerService.addPartner(partner);
-            return ResponseEntity.ok(partner);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to add partner: " + e.getMessage(), e);
-        }
+        return ResponseEntity.ok(partnerService.addPartner(partner));
     }
 
-    // Update Partner
     @PutMapping(path = "/{id}", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Partner> updatePartner(@PathVariable Long id, @RequestBody Partner partner) {
-        try {
-            partner = partnerService.updatePartner(id, partner);
-            return ResponseEntity.ok(partner);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Partner not found with given id: " + id, e);
-        }
+        return ResponseEntity.ok(partnerService.updatePartner(id, partner));
     }
 
-    // Delete Partner
+    // Blocks deletion if user accounts are still linked to this partner
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Void> deletePartner(@PathVariable Long id) {
-        // Block deletion if any user accounts are linked to this partner
         List<AppUser> linkedUsers = appUserService.getAllUsers().stream()
                 .filter(u -> id.equals(u.getPartnerID()))
                 .toList();
@@ -85,11 +69,7 @@ public class PartnerController {
                     "Cannot delete partner: linked user account(s) exist (" + usernames + "). Remove or reassign them first.");
         }
 
-        try {
-            partnerService.deletePartner(id);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Partner not found with given id: " + id, e);
-        }
+        partnerService.deletePartner(id);
+        return ResponseEntity.ok().build();
     }
 }
