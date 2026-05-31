@@ -93,7 +93,7 @@ public class SupportTicketService {
         requireAdmin(auth);
         SupportTicket ticket = mustFind(ticketId);
         requireFromState(ticket, EnumSet.of(TicketState.OPEN));
-        appendMessage(ticket, auth.getName(), message);
+        appendMessage(ticket, "admin", message);
         ticket.setState(TicketState.ANSWERED);
         return ticketRepository.save(ticket);
     }
@@ -120,7 +120,7 @@ public class SupportTicketService {
         requireAdmin(auth);
         SupportTicket ticket = mustFind(ticketId);
         requireFromState(ticket, EnumSet.of(TicketState.RESOLVED));
-        appendMessage(ticket, auth.getName(), message);
+        appendMessage(ticket, "admin", message);
         ticket.setState(TicketState.ANSWERED);
         return ticketRepository.save(ticket);
     }
@@ -129,7 +129,7 @@ public class SupportTicketService {
         requireAdmin(auth);
         SupportTicket ticket = mustFind(ticketId);
         requireFromState(ticket, EnumSet.of(TicketState.RESOLVED));
-        appendMessage(ticket, auth.getName(), "Ticket closed as completed.");
+        appendMessage(ticket, "admin", "Ticket closed as completed.");
         ticket.setState(TicketState.COMPLETED);
         return ticketRepository.save(ticket);
     }
