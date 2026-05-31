@@ -1,5 +1,8 @@
 package ch.fluxed.fluxtrack.data.domain;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +36,8 @@ public class AppUser {
     @Column(length = 255)
     private String logoPath; // static logo, e.g. /images/partners/wylaade.png
 
-    @Lob
+    @JdbcTypeCode(SqlTypes.VARBINARY)
+    @Column(length = 5_000_000)
     private byte[] avatar; // uploaded avatar image bytes
 
     @Column(length = 50)
