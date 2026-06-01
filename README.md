@@ -186,7 +186,7 @@ This Web application relies on [Spring Boot](https://projects.spring.io/spring-b
 - [Spring Boot Starter OAuth2 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html) — JWT verification
 - [PostgreSQL driver](https://jdbc.postgresql.org/) — production profile support
 - [H2 Database Engine](https://www.h2database.com) — in-memory database, runtime scope
-- [springdoc-openapi-starter-webmvc-ui](https://springdoc.org/) v2.3.0 — generates Swagger UI at `/swagger-ui.html`
+- [springdoc-openapi-starter-webmvc-ui](https://springdoc.org/) v2.8.8 — generates Swagger UI at `/swagger-ui.html`
 Initial test data is seeded on application startup via an `@PostConstruct` method in `fluxTrackApplication`, creating two partners (Wylaade GmbH, Drachehöhli GmbH), 19 products, around 35 historical orders spread over the past two months, and four support tickets in different lifecycle states.
 
 
