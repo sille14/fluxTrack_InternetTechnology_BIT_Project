@@ -26,7 +26,7 @@
             "name": "Spring Boot-fluxTrackApplication<demo>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.example.demo.fluxTrackApplication",
+            "mainClass": "ch.fluxed.fluxtrack.fluxTrackApplication",
             "projectName": "demo",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
