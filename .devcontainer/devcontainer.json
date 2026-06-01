@@ -14,9 +14,11 @@
         "8080": {
             "label": "fluxTrack App",
             "onAutoForward": "openBrowser"
+        },
+        "10000": {
+         "onAutoForward": "ignore"
         }
     },
-
     "customizations": {
         "vscode": {
             "extensions": [
