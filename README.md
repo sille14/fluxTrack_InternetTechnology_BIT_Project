@@ -331,4 +331,4 @@ In line with the declaration of authenticity in our Requirements Engineering pap
 - Florian Stiegeler
 
 #### License
-- [Apache License, Version 2.0](blob/master/LICENSE)
+- [Apache License, Version 2.0](fluxTrack/LICENSE)
