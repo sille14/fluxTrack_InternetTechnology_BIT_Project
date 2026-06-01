@@ -248,12 +248,15 @@ function renderPartnerBreakdown(orders) {
         agg.revenue += (o.totalAmount ?? 0);
     });
 
-    // Include every known partner (even those with zero orders in the period)
-    allPartners.forEach(p => {
-        if (!byPartner.has(p.partnerID)) {
-            byPartner.set(p.partnerID, { orders: 0, units: 0, revenue: 0 });
-        }
-    });
+    // Show all partners with zeros only when no partner filter is active
+    const partnerFilter = document.getElementById('report-partner-filter').value;
+    if (!partnerFilter) {
+        allPartners.forEach(p => {
+            if (!byPartner.has(p.partnerID)) {
+                byPartner.set(p.partnerID, { orders: 0, units: 0, revenue: 0 });
+            }
+        });
+    }
 
     const rows = Array.from(byPartner.entries())
         .map(([partnerId, agg]) => ({
