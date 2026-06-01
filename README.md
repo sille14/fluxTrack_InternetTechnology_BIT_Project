@@ -302,12 +302,10 @@ The free-tier instance spins down after inactivity, so the first request after a
 
 ### Roles
 
-*(To be completed: short bullets describing each team member's primary contribution.)*
- 
-- **Fabian Arnold:** *(area of focus)*
-- **Remy Brunner:** *(area of focus)*
-- **Silvan Meier:** *(area of focus)*
-- **Florian Stiegeler:** *(area of focus)*
+- **Fabian Arnold:** Backend design, domain modelling, and UML documentation (use case diagram, domain model, layered architecture diagram). Contributed to README documentation and supported integration testing across the service layer.
+- **Remy Brunner:** Frontend implementation (all eight Thymeleaf/vanilla JS views), Codespaces and Render deployment, service-layer business rules, and README documentation.
+- **Silvan Meier:** Backend implementation and initial security setup (Spring Boot project structure, entity definitions, repository layer, JWT authentication scaffold). Repository management and GitHub administration.
+- **Florian Stiegeler:** Frontend design and application concept. Defined the business requirements and Figma prototype that shaped the use case specifications, and validated the final application against real-world inventory management workflows as the owner of fluxed GmbH.
 
 
 ### Milestones
