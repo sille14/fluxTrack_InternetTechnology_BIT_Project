@@ -68,7 +68,6 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 - UC-12 [Manage Users]: Admin can create, update, and delete application users incl. logins, assign roles, link them to partners, and manage avatars.
 
 ## Design
-> 🚧: Keep in mind the Corporate Identity (CI); you shall decide appropriately the color schema, graphics, typography, layout, User Experience (UX), and so on.
 
 ### Use Case Diagram
 
@@ -78,7 +77,6 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 
 
 ### Wireframe
-> 🚧: It is suggested to start with a wireframe. The wireframe focuses on the website structure (Sitemap planning), sketching the pages using Wireframe components (e.g., header, menu, footer) and UX. You can create a wireframe already with draw.io or similar tools. 
 
 We start on the login screen, where each user has a different login, which is linked to the profile (Partner or Admin). After login, the user is presented with a Dashboard summarising inventory health (own products if Partner, all products if Admin). From there, the user can navigate via the sidebar to Products, Partners (admin only), Orders, Support Tickets, and Reports.
  
@@ -97,7 +95,6 @@ Add Product Screen:
 <img width="972" height="689" alt="image" src="https://github.com/user-attachments/assets/62d658ac-b925-4c2a-b7d0-4840e4aa0fab" />
 
 ### Domain Design
-> 🚧: Provide a picture and describe your domain model; you may use Entity-Relationship Model or UML class diagram. Both can be created in Visual Paradigm - we have an academic license for it.
 
 Domain model:
 
@@ -283,7 +280,7 @@ The free-tier instance spins down after inactivity, so the first request after a
 
 ### Known Limitations
 
-- **No persistent database in the demo deployment.** The application runs on H2 in-memory, so all data resets on restart. A PostgreSQL production profile (`application-prod.properties`) is wired and ready, but the demo intentionally uses H2 as recommended by the assessment for ease of evaluation.
+- **H2 in local development.** The default dev profile uses an in-memory H2 database that resets on every restart. The production deployment on Render uses PostgreSQL with persistent data. The PostgreSQL prod profile is activated via environment variables and is not the default to keep local setup frictionless.
 - **No Shopify integration.** The Requirements Engineering paper specifies bidirectional stock sync with Shopify (UC 202–205). This was descoped for the IT project because the Shopify API requires a paid developer store and OAuth credentials that would expire before grading. The architecture (service layer, REST endpoints) is designed so that a Shopify sync service could be added without changing existing code.
 - **No email notifications.** UC 107 mentions email alerts when a ticket state changes. The current implementation uses an in-app notification bell instead, which fulfils the same user need without requiring an SMTP server or third-party email service.
 - **Password recovery is not implemented.** The "Forgot password?" link on the login page shows a notice directing the user to contact their administrator. A real implementation would require email infrastructure.
@@ -298,7 +295,6 @@ The free-tier instance spins down after inactivity, so the first request after a
 - **Profile-based dynamic branding.** The topbar, sidebar visibility, and modal placeholders all adapt to the logged-in user's profile (fetched once at login and cached in localStorage). Adding a new admin or partner user through the UI immediately works everywhere — no code changes, no config file edits.
 
 ## Project Management
-> 🚧: Include all the participants and briefly describe each of their **individual** contribution and/or roles. Screenshots/descriptions of your Kanban board or similar project management tools are welcome.
 
 ### Roles
 
@@ -316,7 +312,7 @@ The free-tier instance spins down after inactivity, so the first request after a
 5. **Data and API Implementation:** Implementation of persistence, business logic, and REST controllers.
 6. **Security and Frontend Implementation:** JWT-based security, Thymeleaf templates, vanilla JavaScript frontend.
 7. **Feature completion:** Support ticket lifecycle, sales reports with CSV export, notifications bell.
-8. **(optional) Deployment:** Deployment of the application to Render.
+8. **Deployment:** Deployment of the application to Render with PostgreSQL and GitHub Codespaces for cloud-based development.
 
 ## List of Aids
  
