@@ -331,4 +331,5 @@ In line with the declaration of authenticity in our Requirements Engineering pap
 - Florian Stiegeler
 
 #### License
-- [Apache License, Version 2.0](fluxTrack/LICENSE)
+This project was developed as part of the Internet Technology module at FHNW and is provided for educational purposes.
+- [Apache License, Version 2.0](/LICENSE)
