@@ -23,8 +23,8 @@
   - [Project Management](#project-management)
     - [Roles](#roles)
     - [Milestones](#milestones)
+      - [Maintainer](#maintainer)
       - [License](#license)
-  - [List of Aids](#list-of-aids)
 
 ## Analysis
 The original project idea comes from the need of fluxed GmbH to replace manual stock communication between the company and its partners. In the existing process, partners still communicate inventory changes manually, for example through Excel sheets, e-mail, or chat. This leads to delays, missing transparency, and situations where products may still appear purchasable although they are no longer in stock. The purpose of fluxTrack is therefore to provide a central inventory management system with real-time or near-real-time stock visibility and easier maintenance of product data. 
@@ -313,16 +313,6 @@ The free-tier instance spins down after inactivity, so the first request after a
 6. **Security and Frontend Implementation:** JWT-based security, Thymeleaf templates, vanilla JavaScript frontend.
 7. **Feature completion:** Support ticket lifecycle, sales reports with CSV export, notifications bell.
 8. **Deployment:** Deployment of the application to Render with PostgreSQL and GitHub Codespaces for cloud-based development.
-
-## List of Aids
- 
-In line with the declaration of authenticity in our Requirements Engineering paper, this section documents tools used during the implementation phase of the Internet Technology project.
- 
-| Aid | Usage | Affected areas |
-|---|---|---|
-| Claude (Anthropic) | Pair-programming assistant used to plan the frontend architecture, scaffold Thymeleaf templates, write the vanilla JavaScript modules, design the business rules in the service layer (including the ownership-protected update and delete patterns), draft this README, and debug integration issues. The decisions about scope, design, and architecture were taken by the project team; Claude was used to accelerate implementation. | Frontend templates and JavaScript (`templates/`, `static/`), service-layer business rules, README documentation |
-| Grammarly | Grammatical review and phrasing improvements | README and inline documentation comments |
-
 
 #### Maintainer
 - Fabian Arnold
