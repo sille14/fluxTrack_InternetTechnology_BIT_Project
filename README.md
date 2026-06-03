@@ -72,7 +72,8 @@ fluxTrack is a web application for fluxed GmbH and its partners to manage produc
 ### Use Case Diagram
 
 
-<img width="887" height="745" alt="image" src="https://github.com/user-attachments/assets/600af391-a386-4cb9-99da-f143601953f7" />
+<img width="895" height="740" alt="image" src="https://github.com/user-attachments/assets/c56d296d-9336-4046-8e3c-007b15c36983" />
+
 
 
 
@@ -98,12 +99,12 @@ Add Product Screen:
 
 Domain model:
 
-<img width="567" height="467" alt="image" src="https://github.com/user-attachments/assets/967db2f1-79fc-4889-a5c5-01021e537e84" />
+<img width="555" height="525" alt="image" src="https://github.com/user-attachments/assets/0833ec2f-9dc9-4780-b000-e0cd6082a47a" />
 
 
 Layered Architecture:
 
-<img width="1047" height="480" alt="image" src="https://github.com/user-attachments/assets/96328a78-b5cf-4f3d-aab1-f39d2b81416b" />
+<img width="1050" height="485" alt="image" src="https://github.com/user-attachments/assets/1a860290-39e4-4183-b94a-529040bafa1a" />
 
 The `ch.fluxed.fluxtrack.data.domain` package contains the following domain objects / entities including getters and setters:
  
