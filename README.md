@@ -26,6 +26,11 @@
       - [Maintainer](#maintainer)
       - [License](#license)
 
+> **Live application:** [fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)  
+> **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html) · [Codespaces](http://localhost:8080/swagger-ui.html)  
+> **Presentation video:** [Watch on YouTube/SWITCH](https://youtu.be/YOUR_LINK_HERE)  
+> **Team:** Fabian Arnold · Remy Brunner · Silvan Meier · Florian Stiegeler
+
 ## Analysis
 The original project idea comes from the need of fluxed GmbH to replace manual stock communication between the company and its partners. In the existing process, partners still communicate inventory changes manually, for example through Excel sheets, e-mail, or chat. This leads to delays, missing transparency, and situations where products may still appear purchasable although they are no longer in stock. The purpose of fluxTrack is therefore to provide a central inventory management system with real-time or near-real-time stock visibility and easier maintenance of product data. 
 
@@ -263,6 +268,8 @@ The application is deployed on [Render](https://render.com) as a Docker-based we
 **Live URL:** [https://fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)
 
 The free-tier instance spins down after inactivity, so the first request after a period of inactivity may take ~30-50 seconds while the container restarts. Subsequent requests are fast.
+
+**API documentation:** [https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html)
 
 **How it works:**
 
