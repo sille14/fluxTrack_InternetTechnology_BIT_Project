@@ -1,13 +1,15 @@
 # fluxTrack Inventory Management System
 
-#### Contents:
+#### Contents
 - [fluxTrack Inventory Management System](#fluxtrack-inventory-management-system)
-      - [Contents:](#contents)
+      - [Contents](#contents)
+  - [Submission - Links to Deliverables](#submission---links-to-deliverables)
   - [Analysis](#analysis)
     - [Scenario](#scenario)
     - [User Stories](#user-stories)
     - [Use Case fluxTrack](#use-case-fluxtrack)
   - [Design](#design)
+    - [Use Case Diagram](#use-case-diagram)
     - [Wireframe](#wireframe)
     - [Prototype](#prototype)
     - [Domain Design](#domain-design)
@@ -26,9 +28,10 @@
       - [Maintainer](#maintainer)
       - [License](#license)
 
+## Submission - Links to Deliverables
 > **Live application:** [fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)  
-> **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html) 
-> **Presentation video:** [Watch on YouTube/SWITCH](https://youtu.be/YOUR_LINK_HERE)  
+> **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html)  
+> **Presentation video:** [Watch on SWITCHtube](https://tube.switch.ch/videos/i8XRfceaH7)  
 
 ## Analysis
 The original project idea comes from the need of fluxed GmbH to replace manual stock communication between the company and its partners. In the existing process, partners still communicate inventory changes manually, for example through Excel sheets, e-mail, or chat. This leads to delays, missing transparency, and situations where products may still appear purchasable although they are no longer in stock. The purpose of fluxTrack is therefore to provide a central inventory management system with real-time or near-real-time stock visibility and easier maintenance of product data. 
@@ -306,7 +309,7 @@ The free-tier instance spins down after inactivity, so the first request after a
 ### Roles
 
 - **Fabian Arnold:** Backend design, domain modelling, and UML documentation (use case diagram, domain model, layered architecture diagram). Contributed to README documentation and supported integration testing across the service layer.
-- **Remy Brunner:** Frontend implementation (all eight Thymeleaf/vanilla JS views), Codespaces and Render deployment, service-layer business rules, and README documentation.
+- **Remy Brunner:** Frontend implementation (all eight Thymeleaf/vanilla JS views), Codespaces and Render deployment, service-layer business rules, demo video recording and README documentation.
 - **Silvan Meier:** Backend implementation and initial security setup (Spring Boot project structure, entity definitions, repository layer, JWT authentication scaffold). Repository management and GitHub administration.
 - **Florian Stiegeler:** Frontend design and application concept. Defined the business requirements and Figma prototype that shaped the use case specifications, and validated the final application against real-world inventory management workflows as the owner of fluxed GmbH.
 
