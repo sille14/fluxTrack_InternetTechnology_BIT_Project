@@ -28,9 +28,10 @@
       - [License](#license)
 
 ## Submission - Links to Deliverables
+> **GitHub repository**: [https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project](https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project)
 > **Live application:** [fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)  
 > **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html)  
-> **Presentation video:** [Watch on SWITCHtube](https://tube.switch.ch/videos/i8XRfceaH7)  
+> **Presentation video:** [Watch on SWITCHtube](https://tube.switch.ch/videos/i8XRfceaH7)   
 
 ## Analysis
 The original project idea comes from the need of fluxed GmbH to replace manual stock communication between the company and its partners. In the existing process, partners still communicate inventory changes manually, for example through Excel sheets, e-mail, or chat. This leads to delays, missing transparency, and situations where products may still appear purchasable although they are no longer in stock. The purpose of fluxTrack is therefore to provide a central inventory management system with real-time or near-real-time stock visibility and easier maintenance of product data. 
