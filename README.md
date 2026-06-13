@@ -2,7 +2,6 @@
 
 #### Contents
 - [fluxTrack Inventory Management System](#fluxtrack-inventory-management-system)
-      - [Contents](#contents)
   - [Submission - Links to Deliverables](#submission---links-to-deliverables)
   - [Analysis](#analysis)
     - [Scenario](#scenario)
