@@ -28,7 +28,7 @@
       - [License](#license)
 
 ## Submission - Links to Deliverables
-> **GitHub repository**: [https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project](https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project)
+> **GitHub repository**: [https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project](https://github.com/sille14/fluxTrack_InternetTechnology_BIT_Project)   
 > **Live application:** [fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)  
 > **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html)  
 > **Presentation video:** [Watch on SWITCHtube](https://tube.switch.ch/videos/i8XRfceaH7)   
