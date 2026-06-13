@@ -212,7 +212,7 @@ The frontend consists of eight views, each backed by a Thymeleaf template and a 
 | Products | `/products` | `GET /product/`, `POST /product/add`, `PUT /product/{id}`, `DELETE /product/{id}`, `POST /order/sale` |
 | Partners | `/partners` *(admin only)* | `GET /partner/`, `POST /partner/add`, `PUT /partner/{id}`, `DELETE /partner/{id}` |
 | Users | `/users` *(admin only)* | `GET /user/`, `POST /user/add`, `PUT /user/{id}`, `DELETE /user/{id}`, `POST /user/{id}/avatar` |
-| Order History | `/orders` | `GET /order/`, `GET /partner/` |
+| Order History | `/orders` | `GET /order/page`, `GET /order/summary`, `GET /partner/` |
 | Support Tickets | `/tickets` | `GET /ticket/`, `POST /ticket/`, `POST /ticket/{id}/admin-reply`, `/partner-reply`, `/resolve`, `/reopen`, `/complete` |
 | Reports | `/reports` | `GET /order/`, `GET /partner/` |
  

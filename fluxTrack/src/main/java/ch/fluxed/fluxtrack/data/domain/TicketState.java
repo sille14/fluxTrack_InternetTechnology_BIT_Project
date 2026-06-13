@@ -7,7 +7,7 @@ package ch.fluxed.fluxtrack.data.domain;
  *   OPEN -> ANSWERED      (admin responds)
  *   ANSWERED -> OPEN      (partner replies, not yet satisfied)
  *   ANSWERED -> RESOLVED  (partner confirms problem solved)
- *   RESOLVED -> OPEN      (admin reopens with request for details)
+ *   RESOLVED -> ANSWERED  (admin reopens with request for details)
  *   RESOLVED -> COMPLETED (admin closes ticket as final)
  *   COMPLETED -> (terminal)
  *
