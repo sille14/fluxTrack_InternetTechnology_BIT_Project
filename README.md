@@ -27,7 +27,7 @@
       - [License](#license)
 
 > **Live application:** [fluxtrack-internettechnology-bit-project.onrender.com](https://fluxtrack-internettechnology-bit-project.onrender.com)  
-> **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html) · [Codespaces tbd](http://xxxxx/swagger-ui.html)  
+> **API documentation (Swagger UI):** [Render](https://fluxtrack-internettechnology-bit-project.onrender.com/swagger-ui.html) 
 > **Presentation video:** [Watch on YouTube/SWITCH](https://youtu.be/YOUR_LINK_HERE)  
 
 ## Analysis
