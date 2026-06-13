@@ -257,7 +257,7 @@ document.getElementById('confirm-delete-btn').addEventListener('click', async ()
         closeDeleteModal();
         await loadPartners();
     } else {
-        deleteError.textContent = `Could not delete partner${res ? ` (HTTP ${res.status})` : ''}. Partners with linked products or an active usermay need to be unlinked first.`;
+        deleteError.textContent = `Could not delete partner${res ? ` (HTTP ${res.status})` : ''}. Partners with linked products or an active user may need to be unlinked first.`;
     }
 });
 
