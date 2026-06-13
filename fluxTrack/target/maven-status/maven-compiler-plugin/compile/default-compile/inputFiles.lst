@@ -1,0 +1,12 @@
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/business/PartnerService.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/business/ProductService.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/controller/PartnerController.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/controller/ProductController.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/data/domain/Address.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/data/domain/Partner.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/data/domain/Product.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/data/repository/PartnerRepository.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/data/repository/ProductRepository.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/fluxTrackApplication.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/security/SecurityConfig.java
+/workspaces/fluxTrack_InternetTechnology_BIT_Project/fluxTrack/src/main/java/com/example/demo/security/TokenService.java

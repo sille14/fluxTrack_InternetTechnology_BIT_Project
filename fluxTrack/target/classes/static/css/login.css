@@ -1,0 +1,80 @@
+/* ============================================
+   Login page
+   ============================================ */
+.login-body {
+    background: var(--color-bg);
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+}
+.login-page {
+    width: 100%; max-width: 1200px;
+}
+.login-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 48px 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    box-shadow: var(--shadow);
+    align-items: center;
+}
+
+.login-form-section { max-width: 420px; }
+.login-logo-mark {
+    width: 32px; height: 32px;
+    background: var(--color-gold);
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+.login-form-section h1 {
+    margin: 0 0 12px 0;
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+.login-subtitle {
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 0 28px 0;
+    max-width: 320px;
+}
+
+.login-form .form-group { margin-bottom: 20px; }
+.forgot-password {
+    display: block;
+    text-align: center;
+    margin: 18px 0 24px;
+    color: var(--color-text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.forgot-password:hover { color: var(--color-gold); }
+
+/* logo */
+.login-brand-section {
+    display: flex; align-items: center; justify-content: center;
+}
+
+.login-logo-image {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .login-card {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        padding: 32px 28px;
+    }
+    .login-brand-section { display: none; }
+    .login-form-section { max-width: none; margin: 0 auto; width: 100%; }
+}

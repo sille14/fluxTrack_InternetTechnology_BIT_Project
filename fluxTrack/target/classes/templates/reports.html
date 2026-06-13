@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head}">
+    <title>Reports &middot; fluxTrack</title>
+</head>
+<body>
+<div class="app-layout">
+    <div th:replace="~{fragments/sidebar :: sidebar('reports')}"></div>
+    <div class="main-area">
+        <div th:replace="~{fragments/topbar :: topbar}"></div>
+        <main class="content">
+            <div class="content-card">
+                <div class="content-header">
+                    <div>
+                        <h1>Reports</h1>
+                        <p class="dashboard-greeting" id="report-subtitle">Sales analysis</p>
+                    </div>
+                </div>
+
+                <div class="content-toolbar">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label for="report-date-from">From</label>
+                            <input type="date" id="report-date-from" class="search-input">
+                        </div>
+                        <div class="filter-group">
+                            <label for="report-date-to">To</label>
+                            <input type="date" id="report-date-to" class="search-input">
+                        </div>
+                        <div class="filter-group hidden" id="report-partner-filter-group">
+                            <label for="report-partner-filter">Partner</label>
+                            <select id="report-partner-filter" class="filter-select">
+                                <option value="">All partners</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-gold-light" id="clear-report-filters">Reset</button>
+                    </div>
+                </div>
+
+                <!-- Overall stat cards -->
+                <div class="stats-grid" id="report-stats-grid">
+                    <div class="stat-card stat-card-loading">Loading...</div>
+                </div>
+
+                <!-- Sales over time -->
+                <div class="dashboard-section">
+                    <h2 class="dashboard-section-title">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Sales Over Time</span>
+                    </h2>
+                    <div class="report-chart-container" id="sales-chart">
+                        <p class="dashboard-empty">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Per-partner breakdown (admin only) -->
+                <div class="dashboard-section hidden" id="partner-breakdown-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <span>Per-Shop Breakdown</span>
+                        </h2>
+                        <button class="btn btn-gold-light btn-small" id="export-partner-csv">Export CSV</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Partner</th>
+                                <th>Orders</th>
+                                <th>Units Sold</th>
+                                <th>Revenue (CHF)</th>
+                                <th>Avg Order Value (CHF)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="partner-breakdown-tbody">
+                            <tr><td colspan="5" class="table-empty">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Top products -->
+                <div class="dashboard-section">
+                    <div class="dashboard-section-header">
+                        <h2 class="dashboard-section-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            <span>Top 5 Products by Revenue</span>
+                        </h2>
+                        <button class="btn btn-gold-light btn-small" id="export-products-csv">Export CSV</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th class="th-partner hidden">Partner</th>
+                                <th>Orders</th>
+                                <th>Units Sold</th>
+                                <th>Revenue (CHF)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="top-products-tbody">
+                            <tr><td colspan="5" class="table-empty">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script th:src="@{/js/auth.js}"></script>
+<script th:src="@{/js/reports.js}"></script>
+</body>
+</html>

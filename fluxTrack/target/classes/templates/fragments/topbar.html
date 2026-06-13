@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="topbar" class="topbar">
+    <button class="topbar-toggle" aria-label="Toggle menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </button>
+    <div class="topbar-right">
+        <!-- Bell: same as before, just with an id, a relative wrapper for the dropdown, and a dot child -->
+        <div class="topbar-bell-wrap" id="bell-wrap">
+            <button class="topbar-bell" id="bell-btn" type="button" aria-label="Notifications">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="bell-dot hidden" id="bell-dot"></span>
+            </button>
+            <div class="bell-dropdown hidden" id="bell-dropdown" role="menu">
+                <div class="bell-dropdown-header">Recent activity</div>
+                <ul class="bell-list" id="bell-list">
+                    <li class="bell-empty">Nothing new.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="topbar-company">
+            <!-- src/alt are set by auth.js based on the logged-in user
+                 (admin → fluxed.png, wylaade → wylaade.png, drachehoehli → drachehoehli.png).
+                 Left blank in the template to avoid a flash of the wrong logo. -->
+            <img class="company-logo" id="company-logo" alt="">
+            <span class="company-name" id="company-name">Wylaade GmbH</span>
+            <button class="company-menu" id="logout-btn" title="Logout">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Inside the fragment so Thymeleaf actually includes it -->
+    <script th:src="@{/js/bell.js}"></script>
+</header>
+</body>
+</html>
